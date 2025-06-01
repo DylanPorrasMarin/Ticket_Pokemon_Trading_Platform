@@ -1,0 +1,41 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Create .env from secrets
+        run: |
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "RABBITMQ_URL=${{ secrets.RABBITMQ_URL }}" >> .env
+          echo "POKEAPI_URL=${{ secrets.POKEAPI_URL }}" >> .env
+          echo "STARTER_POKEMON_COUNT=3" >> .env
+
+      - name: Debug .env (optional)
+        run: cat .env
+
+      - name: Build project
+        run: npm run build
