@@ -1,9 +1,9 @@
-// src/workers/trade.worker.ts
 import amqp from 'amqplib';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { logger } from '../utils/logger';
 import { processTrade } from '../services/trade.service';
+import { connectRedis } from '../config/redis';
 
 dotenv.config();
 
@@ -11,7 +11,6 @@ const QUEUE_NAME = 'trade_requests';
 
 const startWorker = async () => {
   try {
-    // ✅ Conexión a MongoDB
     const mongoURI = process.env.MONGODB_URI;
     if (!mongoURI) {
       logger.error('Missing MONGODB_URI in environment variables.');
@@ -19,9 +18,10 @@ const startWorker = async () => {
     }
 
     await mongoose.connect(mongoURI);
-    logger.info(' MongoDB connected (from worker)');
+    logger.info('MongoDB connected (from worker)');
 
-    // ✅ Conexión a RabbitMQ
+    await connectRedis(); // Initialize Redis connection
+
     const connection = await amqp.connect(process.env.RABBITMQ_URL!);
     const channel = await connection.createChannel();
 
@@ -35,7 +35,7 @@ const startWorker = async () => {
           const content = msg.content.toString();
           const { tradeId } = JSON.parse(content);
 
-          logger.info(`🔁 Processing trade request: ${tradeId}`);
+          logger.info(`Processing trade request: ${tradeId}`);
 
           try {
             await processTrade(tradeId);
@@ -43,7 +43,7 @@ const startWorker = async () => {
             logger.info(`Trade ${tradeId} processed successfully`);
           } catch (err) {
             logger.error(`Failed to process trade ${tradeId}: ${err}`);
-            channel.nack(msg, false, false); // No requeue
+            channel.nack(msg, false, false);
           }
         }
       },

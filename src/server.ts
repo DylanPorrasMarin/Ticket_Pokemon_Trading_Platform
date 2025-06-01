@@ -1,9 +1,19 @@
-// src/server.ts
-import app from './app';
-import { logger } from './utils/logger';
+import createApp from './app';
+import { connectDB } from './config/db';
+import { connectRedis, redisClient } from './config/redis';
+import { connectRabbitMQ } from './config/rabbitmq';
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  logger.info(`🚀 Server running at http://localhost:${PORT}`);
-});
+const start = async () => {
+  await connectDB();
+  await connectRedis();
+  await connectRabbitMQ();
+
+  const app = createApp(redisClient); // Aquí ya conectado
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+start();

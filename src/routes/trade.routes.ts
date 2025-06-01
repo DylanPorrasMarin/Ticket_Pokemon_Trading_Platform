@@ -27,7 +27,7 @@ const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => P
 
 /**
  * @swagger
- * /api/trades/request:
+ * /trades/request:
  *   post:
  *     summary: Request a Pokémon trade
  *     tags: [Trades]
@@ -58,7 +58,7 @@ router.post('/request', authenticate, asyncHandler(requestTrade));
 
 /**
  * @swagger
- * /api/trades/received:
+ * /trades/received:
  *   get:
  *     summary: Get received trade requests
  *     tags: [Trades]
@@ -74,7 +74,7 @@ router.get('/received', authenticate, asyncHandler(getReceivedTrades));
 
 /**
  * @swagger
- * /api/trades/{id}/accept:
+ * /trades/{id}/accept:
  *   post:
  *     summary: Accept a trade request
  *     tags: [Trades]
@@ -101,7 +101,7 @@ router.post('/:id/accept', authenticate, asyncHandler(acceptTrade));
 
 /**
  * @swagger
- * /api/trades/{id}/reject:
+ * /trades/{id}/reject:
  *   post:
  *     summary: Reject a trade request
  *     tags: [Trades]

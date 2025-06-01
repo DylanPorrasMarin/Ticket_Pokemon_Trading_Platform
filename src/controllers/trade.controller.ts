@@ -12,17 +12,33 @@ export const requestTrade = async (req: Request, res: Response) => {
     const { receiver, senderPokemon, receiverPokemon } = req.body;
     const senderId = (req as any).user.id;
 
-    if (receiver === senderId) {
-      return res.status(400).json({ message: 'Cannot trade with yourself' });
-    }
-
+    // Validaciones básicas
     if (!receiver || !senderPokemon || !receiverPokemon) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    const senderUser = await User.findById(senderId);
+    if (receiver === senderId) {
+      return res.status(400).json({ message: 'Cannot trade with yourself' });
+    }
+
+    // consult if the sender exists and if the trade already exists
+    const [senderUser, existingTrade] = await Promise.all([
+      User.findById(senderId),
+      Trade.findOne({
+        sender: senderId,
+        receiver,
+        senderPokemon,
+        receiverPokemon,
+        status: 'pending',
+      }),
+    ]);
+
     if (!senderUser) {
       return res.status(404).json({ message: 'Sender not found' });
+    }
+
+    if (existingTrade) {
+      return res.status(400).json({ message: 'Trade already exists' });
     }
 
     const ownsPokemon = senderUser.pokemons.some(
@@ -33,17 +49,17 @@ export const requestTrade = async (req: Request, res: Response) => {
       return res.status(403).json({ message: 'You do not own this Pokémon' });
     }
 
-    // Create the trade
     const trade = await Trade.create({ sender: senderId, receiver, senderPokemon, receiverPokemon });
 
-    // Add trade reference to sender and receiver
-    await User.findByIdAndUpdate(senderId, { $push: { trades: trade._id } });
-    await User.findByIdAndUpdate(receiver, { $push: { trades: trade._id } });
+    await Promise.all([
+      User.findByIdAndUpdate(senderId, { $push: { trades: trade._id } }),
+      User.findByIdAndUpdate(receiver, { $push: { trades: trade._id } }),
+    ]);
 
-    res.status(201).json({ message: 'Trade request sent', trade });
+    return res.status(201).json({ message: 'Trade request sent', trade });
   } catch (error) {
     logger.error('Trade request failed', error);
-    res.status(500).json({ message: 'Failed to send trade request' });
+    return res.status(500).json({ message: 'Failed to send trade request' });
   }
 };
 

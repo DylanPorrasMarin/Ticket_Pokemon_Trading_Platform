@@ -6,7 +6,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/ranking:
+ * /ranking:
  *   get:
  *     summary: Get user rankings based on successful trades
  *     tags: [Ranking]
