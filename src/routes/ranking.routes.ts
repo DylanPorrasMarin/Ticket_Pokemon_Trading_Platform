@@ -6,6 +6,13 @@ const router = Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Ranking
+ *   description: Ranking endpoints
+ */
+
+/**
+ * @swagger
  * /ranking:
  *   get:
  *     summary: Get user rankings based on successful trades

@@ -22,3 +22,4 @@ export const assignStarterPokemons = async (count: number) => {
 
   return pokemons;
 };
+

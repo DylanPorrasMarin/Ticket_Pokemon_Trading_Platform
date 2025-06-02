@@ -1,5 +1,6 @@
 // src/routes/trade.routes.ts
 import { Router } from 'express';
+import { asyncHandler } from '../helpers/handler.helper';
 import {
   requestTrade,
   getReceivedTrades,
@@ -9,14 +10,6 @@ import {
 import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
-
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-
-const asyncHandler = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>): RequestHandler =>
-  (req, res, next) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };
-
 
 /**
  * @swagger
