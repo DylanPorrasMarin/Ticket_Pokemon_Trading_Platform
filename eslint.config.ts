@@ -1,7 +1,10 @@
-const eslintPluginTs = require('@typescript-eslint/eslint-plugin');
-const parserTs = require('@typescript-eslint/parser');
+import eslintPluginTs from '@typescript-eslint/eslint-plugin';
+import parserTs from '@typescript-eslint/parser';
+import type { Linter } from 'eslint';
 
-module.exports = [
+type NewType = Linter.Config;
+
+const config: NewType[] = [
   {
     files: ['**/*.ts'],
     languageOptions: {
@@ -12,7 +15,7 @@ module.exports = [
       },
     },
     plugins: {
-      '@typescript-eslint': eslintPluginTs,
+      '@typescript-eslint': eslintPluginTs as any,
     },
     rules: {
       '@typescript-eslint/no-unused-vars': 'warn',
@@ -20,3 +23,5 @@ module.exports = [
     },
   },
 ];
+
+export default config;

@@ -53,5 +53,8 @@
     "inflight": false,
     "lodash.get": false,
     "lodash.isequal": false
-  }
+  },
+  "eslint": {
+  "configType": "module"
+}
 }
