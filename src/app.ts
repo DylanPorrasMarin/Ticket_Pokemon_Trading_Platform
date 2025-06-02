@@ -11,20 +11,20 @@ dotenv.config();
 const createApp = (redisClient: any) => {
   const app = express();
 
-  // Carga middlewares base
+  // load middlewares
   loadMiddlewares(app);
 
   // Documentación Swagger
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-  // Redirección automática desde /
+  //  redirect root to docs in development
   if (process.env.NODE_ENV !== 'production') {
     app.get('/', (req, res) => {
       res.redirect('/docs');
     });
   }
 
-  // API Routes protegidas con rate limiter
+  // API Routes 
   const apiRateLimiter = createApiRateLimiter(redisClient);
   const router = createRouter(apiRateLimiter);
   app.use('/api', router);

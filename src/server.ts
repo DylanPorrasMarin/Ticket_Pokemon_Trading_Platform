@@ -10,7 +10,7 @@ const start = async () => {
   await connectRedis();
   await connectRabbitMQ();
 
-  const app = createApp(redisClient); // Aquí ya conectado
+  const app = createApp(redisClient);
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });

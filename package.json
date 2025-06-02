@@ -1,15 +1,11 @@
 {
   "devDependencies": {
     "@types/amqplib": "^0.10.7",
-    "@types/bcryptjs": "^3.0.0",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
-    "@types/helmet": "^4.0.0",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.15.29",
-    "@types/redis": "^4.0.11",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@typescript-eslint/eslint-plugin": "^8.33.0",
@@ -21,13 +17,13 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0"
   },
- "scripts": {
-  "dev": "concurrently \"ts-node-dev --respawn --transpile-only src/server.ts\" \"ts-node-dev --respawn --transpile-only src/workers/trade.worker.ts\"",
-  "build": "tsc",
-  "start": "concurrently \"node -r dotenv/config dist/server.js\" \"node -r dotenv/config dist/workers/trade.worker.js\"",
-  "worker": "ts-node src/workers/trade.worker.ts",
-  "lint": "eslint \"src/**/*.{ts,tsx}\" --quiet"
-},
+  "scripts": {
+    "dev": "concurrently \"ts-node-dev --respawn --transpile-only src/server.ts\" \"ts-node-dev --respawn --transpile-only src/workers/trade.worker.ts\"",
+    "build": "tsc",
+    "start": "concurrently \"node -r dotenv/config dist/server.js\" \"node -r dotenv/config dist/workers/trade.worker.js\"",
+    "worker": "ts-node src/workers/trade.worker.ts",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --quiet"
+  },
   "dependencies": {
     "amqplib": "^0.10.8",
     "axios": "^1.9.0",
@@ -48,5 +44,12 @@
   },
   "engines": {
     "node": "22.1.0"
+  },
+  "overrides": {
+    "glob": "^10.3.1",
+    "rimraf": "^4.3.1",
+    "inflight": false,
+    "lodash.get": false,
+    "lodash.isequal": false
   }
 }

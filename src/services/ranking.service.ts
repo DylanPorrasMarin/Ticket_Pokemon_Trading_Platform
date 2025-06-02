@@ -1,4 +1,3 @@
-// src/services/ranking.service.ts
 import { User } from '../models/user.model';
 
 export const getTopTraders = async (limit = 10) => {
