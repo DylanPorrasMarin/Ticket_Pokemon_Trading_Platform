@@ -13,6 +13,7 @@
     "@typescript-eslint/parser": "^8.33.0",
     "concurrently": "^9.1.2",
     "eslint": "^9.28.0",
+    "jiti": "^2.4.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3",
@@ -23,7 +24,7 @@
     "build": "tsc",
     "start": "concurrently \"node -r dotenv/config dist/server.js\" \"node -r dotenv/config dist/workers/trade.worker.js\"",
     "worker": "ts-node src/workers/trade.worker.ts",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" --quiet"
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --config ./eslint.config.ts --quiet"
   },
   "dependencies": {
     "amqplib": "^0.10.8",
@@ -55,6 +56,6 @@
     "lodash.isequal": false
   },
   "eslint": {
-  "configType": "module"
-}
+    "configType": "module"
+  }
 }
